@@ -1,1 +1,1 @@
-g++ strukdat.cpp main.cpp -o main3
+g++ strukdat.cpp main.cpp -o main
