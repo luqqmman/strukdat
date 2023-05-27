@@ -1,5 +1,6 @@
 #include "strukdat.hpp"
 
+// Node
 Node::Node(void){
 	x = 0;
 	y = 0;
@@ -22,11 +23,12 @@ bool Node::operator==(const Node& other){
 	return x == other.x && y == other.y;
 }
 
+// Queue
 Queue::Queue(void){
 	head = nullptr;
 }
 
-void Queue::enqueue(Node* n){
+void Queue::add(Node* n){
 	if (head == nullptr){
 		n->next = nullptr;
 		head = tail = n;
@@ -40,7 +42,7 @@ bool Queue::is_empty(void){
 	return head == nullptr;
 }
 
-Node* Queue::dequeue(void){
+Node* Queue::get(void){
 	Node* n = head;
 	head = n->next;
 	return n;
@@ -55,6 +57,47 @@ Node* Queue::end(void){
 }
 
 Queue::~Queue(void){
+	for (Node* n = head; n != nullptr; n = head){
+		head = head->next;
+		delete n;
+	}
+}
+
+// Stack
+Stack::Stack(void){
+	head = nullptr;
+}
+
+void Stack::add(Node* n){
+	if (head == nullptr){
+		n->next = nullptr;
+		head = tail = n;
+	} else {
+		Node* tmp = head;
+		head = n;
+		n->next = tmp;
+	}
+}
+
+bool Stack::is_empty(void){
+	return head == nullptr;
+}
+
+Node* Stack::get(void){
+	Node* n = head;
+	head = n->next;
+	return n;
+}
+
+Node* Stack::begin(void){
+	return head;
+}
+
+Node* Stack::end(void){
+	return tail;
+}
+
+Stack::~Stack(void){
 	for (Node* n = head; n != nullptr; n = head){
 		head = head->next;
 		delete n;

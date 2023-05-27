@@ -11,16 +11,39 @@ struct Node {
 	void set(int a, int b);
 };
 
-class Queue {
+class LinkedList {
+	public:
+		virtual void add(Node* n) = 0;
+		virtual bool is_empty(void) = 0;
+		virtual Node* get(void) = 0;
+		virtual Node* begin(void) = 0;
+		virtual Node* end(void) = 0;
+};
+
+class Queue : public LinkedList {
 	Node* head;
 	Node* tail;
 
 	public:
 		Queue(void);
-		void enqueue(Node* n);
+		void add(Node* n);
 		bool is_empty(void);
-		Node* dequeue(void);
+		Node* get(void);
 		Node* begin(void);
 		Node* end(void);
 		~Queue(void);
+};
+
+class Stack : public LinkedList {
+	Node* head;
+	Node* tail;
+
+	public:
+		Stack(void);
+		void add(Node* n);
+		bool is_empty(void);
+		Node* get(void);
+		Node* begin(void);
+		Node* end(void);
+		~Stack(void);
 };

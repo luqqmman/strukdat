@@ -2,10 +2,14 @@
 #include <fstream>
 #include <iterator>
 #include <string>
+#include <system_error>
 #include <vector>
-#include <unistd.h>
+#include <stdlib.h>
 #include "strukdat.hpp"
 #include "setting.hpp"
+
+// #include <unistd.h> // for linux
+// #include <windows.h> // for windows
 using namespace std;
 
 /* Variabel global */
@@ -18,17 +22,22 @@ vector<vector<Node>> backtracker;
 /* fungsi driver */
 void print_queue(Node* n);
 void print_map(vector<vector<char>>& m);
+void print_logo();
 
 
 int main(void){
 	/* Buka file MAP */
-	ifstream f{MAP};
+	print_logo();                                
+	cout << "Enter filename: ";
+	string filename;
+	cin >> filename;
+	ifstream f{filename};
 	string buffer;
 
 
 	/* gagal membuka file -> exit program */
 	if (!f){
-		cout << "gagal membuka " << MAP << endl; 
+		cout << "gagal membuka " << filename << endl; 
 		return -1;
 	}
 
@@ -71,16 +80,27 @@ int main(void){
 		backtracker.push_back(vn);
 	}
 
+	// Mode
+	int mode = 0;
+	do {
+		cout << "1. BFS (for shortest path)" << endl;
+		cout << "2. DFS (for random path)" << endl;
+		cout << "select 1 or 2: ";
+		cin >> mode;
+	} while (mode != 1 && mode != 2);
+	
+	LinkedList* container;
+	if (mode == 1) container = new Queue();
+	else container = new Stack();
 	
 	/* buat queue lalu masukan node yang menunjukan posisi awal */
-	Queue container;
 	Node* n = new Node(start_pos.x, start_pos.y);
-	container.enqueue(n);
+	container->add(n);
 
 	/* explore MAP sampai queue kosong atau posisi akhir ditemukan */
-	while (!container.is_empty()){
+	while (!container->is_empty()){
 		/* evaluasi posisi terbaru */
-		Node* position = container.dequeue();
+		Node* position = container->get();
 
 		/* hentikan loop jika posisi terbaru adalah posisi akhir yang dicari */
 		if (*position == finish_pos) break;
@@ -116,7 +136,7 @@ int main(void){
 			visited[pos.x][pos.y] = true;
 
 			/* masukan posisi terdekat ke queue untuk di evaluasi */
-			container.enqueue(new Node(pos.x, pos.y));
+			container->add(new Node(pos.x, pos.y));
 		}
 		delete position;
 	}
@@ -139,9 +159,15 @@ int main(void){
 	}
 
 	/* print MAP hasil pencarian dan langkah yang dibutuhkan */
+	cout << "\n\n---------------------------------------------------------\n\n";
+	print_logo();
 	bm[finish_pos.x][finish_pos.y] = FINISH;
 	print_map(bm);
-	cout << "shortest path: " << shortest << endl;
+	
+	if (mode == 1) cout << "shortest path: " << shortest << endl;
+	else cout << "random path: " << shortest << endl;
+	cout << "\n\n---------------------------------------------------------\n\n";
+
 }
 
 /* fungsi debug untuk print isi queue */
@@ -154,10 +180,19 @@ void print_queue(Node* n){
 
 /* fungsi untuk print isi MAP */
 void print_map(vector<vector<char>>& m){
-	usleep(DELAY);
+	// usleep(DELAY); // for linux
+	// Sleep(DELAY); // for windows
 	for (const auto& line : m){
 		for (const  auto& c : line) cout << c;
 		cout << endl;
 	}
 	cout << endl;
+}
+
+void print_logo(){
+	cout << " ____       _   _       _____ _           _           \n";
+	cout << "|  _ \\ __ _| |_| |__   |  ___(_)_ __   __| | ___ _ __ \n";
+	cout << "| |_) / _` | __| '_ \\  | |_  | | '_ \\ / _` |/ _ \\ '__|\n";
+	cout << "|  __/ (_| | |_| | | | |  _| | | | | | (_| |  __/ |   \n";
+	cout << "|_|   \\__,_|\\__|_| |_| |_|   |_|_| |_|\\__,_|\\___|_|   \n\n";
 }
