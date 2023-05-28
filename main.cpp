@@ -1,15 +1,12 @@
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include <fstream>
 #include <iterator>
 #include <string>
-#include <system_error>
 #include <vector>
-#include <stdlib.h>
 #include "strukdat.hpp"
 #include "setting.hpp"
-
-// #include <unistd.h> // for linux
-// #include <windows.h> // for windows
 using namespace std;
 
 /* Variabel global */
@@ -180,8 +177,7 @@ void print_queue(Node* n){
 
 /* fungsi untuk print isi MAP */
 void print_map(vector<vector<char>>& m){
-	// usleep(DELAY); // for linux
-	// Sleep(DELAY); // for windows
+	this_thread::sleep_for(chrono::milliseconds(DELAY));
 	for (const auto& line : m){
 		for (const  auto& c : line) cout << c;
 		cout << endl;

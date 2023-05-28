@@ -8,4 +8,4 @@ const char START = 'A';
 const char FINISH = 'Z';
 const char VISITED = '*';
 const char SHORTEST = '+';
-const unsigned int DELAY = 10000;
+const unsigned int DELAY = 10;
